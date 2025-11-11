@@ -1,0 +1,58 @@
+tags:
+  - Contacts
+summary: Kişi listesini getir
+operationId: getContactsList
+description: Kimliği doğrulanmış kullanıcı için tüm kişilerin bir listesini (sayfalanmış olarak) döndürür.
+security:
+  - bearerAuth: []
+parameters:
+  - name: page
+    in: query
+    description: Döndürülecek sayfa numarası.
+    schema:
+      type: integer
+      minimum: 1
+      default: 1
+  - name: limit
+    in: query
+    description: Sayfa başına kişi sayısı.
+    schema:
+      type: integer
+      minimum: 1
+      default: 10
+  - name: favorite
+    in: query
+    description: Kişileri favori durumuna göre filtrele.
+    schema:
+      type: boolean
+responses:
+  '200':
+    description: Başarılı yanıt. Kişi listesi ve sayfalama bilgisi döndürür.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 100
+            page:
+              type: integer
+              example: 1
+            limit:
+              type: integer
+              example: 10
+            data:
+              type: array
+              items:
+                # 'Contact' şemamızı burada yeniden kullanıyoruz.
+                # Eğer daha önce (bir önceki adımda) ../../components/schemas/Contact.yaml 
+                # dosyasını oluşturduysanız bu çalışacaktır.
+                $ref: ../../components/schemas/Contact.yaml 
+  '401':
+    description: Yetkisiz.
+    content:
+      application/json:
+        schema:
+          # Daha önce oluşturduğumuz Unauthorized yanıtını yeniden kullanıyoruz.
+          $ref: ../../components/responses/Unauthorized.yaml

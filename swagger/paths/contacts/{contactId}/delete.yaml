@@ -1,0 +1,38 @@
+tags:
+  - Contacts
+summary: Bir kişiyi sil
+operationId: deleteContact
+description: Belirtilen ID'ye sahip kişiyi siler.
+security:
+  - bearerAuth: []
+parameters:
+  - name: contactId
+    in: path
+    required: true
+    description: Silinecek kişinin ID'si.
+    schema:
+      type: string
+      example: 605c72ef2a709d001f40d123
+responses:
+  '200':
+    description: Başarılı. Silinen kişiyi veya başarı mesajını döndürür.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Contact deleted successfully"
+  '401':
+    description: Yetkisiz.
+    content:
+      application/json:
+        schema:
+          $ref: ../../../components/responses/Unauthorized.yaml
+  '404':
+    description: Bulunamadı.
+    content:
+      application/json:
+        schema:
+          $ref: ../../../components/responses/NotFound.yaml

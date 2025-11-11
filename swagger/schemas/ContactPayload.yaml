@@ -1,0 +1,22 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Yeni kişinin adı.
+    example: Jane Doe
+  email:
+    type: string
+    description: Yeni kişinin e-postası.
+    example: jane.doe@example.com
+  phone:
+    type: string
+    description: Yeni kişinin telefonu.
+    example: (987) 654-3210
+  favorite:
+    type: boolean
+    description: Favori durumu (isteğe bağlı).
+    default: false
+required:
+  - name
+  - email
+  - phone

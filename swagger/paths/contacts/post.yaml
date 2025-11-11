@@ -1,0 +1,39 @@
+tags:
+  - Contacts
+summary: Yeni bir kişi oluştur
+operationId: createContact
+description: Kimliği doğrulanmış kullanıcı için yeni bir kişi oluşturur.
+security:
+  - bearerAuth: []
+requestBody:
+  description: Oluşturulacak kişinin verileri.
+  required: true
+  content:
+    application/json:
+      schema:
+        # Az önce oluşturduğumuz ContactPayload şemasına referans veriyoruz:
+        $ref: ../../components/schemas/ContactPayload.yaml
+responses:
+  '201':
+    description: Başarılı. Yeni oluşturulan kişi nesnesini döndürür.
+    content:
+      application/json:
+        schema:
+          # Başarılı olduğunda tam 'Contact' nesnesini (ID'li hali) döndürürüz.
+          $ref: ../../components/schemas/Contact.yaml
+  '400':
+    description: Bad Request. İstek gövdesinde eksik veya hatalı veri (örn. 'name' eksik).
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Body must have 'name' field"
+  '401':
+    description: Yetkisiz.
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/responses/Unauthorized.yaml

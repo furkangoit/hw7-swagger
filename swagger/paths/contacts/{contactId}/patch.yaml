@@ -1,0 +1,53 @@
+tags:
+  - Contacts
+summary: Mevcut bir kişiyi güncelle
+operationId: updateContact
+description: Bir kişinin belirli alanlarını (isim, e-posta, telefon vb.) günceller.
+security:
+  - bearerAuth: []
+parameters:
+  - name: contactId
+    in: path
+    required: true
+    description: Güncellenecek kişinin ID'si.
+    schema:
+      type: string
+      example: 605c72ef2a709d001f40d123
+requestBody:
+  description: Güncellenecek alanlar. En az bir alan gereklidir.
+  content:
+    application/json:
+      schema:
+        # POST için kullandığımız payload'u yeniden kullanabiliriz, 
+        # ancak burada alanlar 'required' olmamalı.
+        # Şimdilik basitlik için onu kullanıyoruz:
+        $ref: ../../../components/schemas/ContactPayload.yaml
+responses:
+  '200':
+    description: Başarılı. Güncellenmiş kişi nesnesini döndürür.
+    content:
+      application/json:
+        schema:
+          $ref: ../../../components/schemas/Contact.yaml
+  '400':
+    description: Bad Request. Validasyon hatası (örn. 'email' formatı yanlış).
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Validation error"
+  '401':
+    description: Yetkisiz.
+    content:
+      application/json:
+        schema:
+          $ref: ../../../components/responses/Unauthorized.yaml
+  '404':
+    description: Bulunamadı.
+    content:
+      application/json:
+        schema:
+          $ref: ../../../components/responses/NotFound.yaml

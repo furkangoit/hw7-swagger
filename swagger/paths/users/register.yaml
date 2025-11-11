@@ -1,0 +1,39 @@
+tags:
+  - Auth
+summary: Yeni bir kullanıcı kaydı
+operationId: registerUser
+description: Yeni bir kullanıcı hesabı oluşturur.
+requestBody:
+  description: Kullanıcı kayıt bilgileri
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: ../../components/schemas/UserCredentials.yaml
+responses:
+  '201':
+    description: Başarılı kayıt. Yeni kullanıcıyı döndürür.
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/UserResponse.yaml
+  '409':
+    description: Conflict. Bu e-posta zaten kullanımda.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Email in use"
+  '400':
+    description: Bad Request. Validasyon hatası.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Validation error"

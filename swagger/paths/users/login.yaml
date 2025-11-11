@@ -1,0 +1,29 @@
+tags:
+  - Auth
+summary: Kullanıcı girişi
+operationId: loginUser
+description: Kullanıcı girişi yapar ve bir JWT token döndürür.
+requestBody:
+  description: Kullanıcı giriş bilgileri
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: ../../components/schemas/UserCredentials.yaml
+responses:
+  '200':
+    description: Başarılı giriş. Token ve kullanıcı bilgisini döndürür.
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/LoginResponse.yaml
+  '401':
+    description: Unauthorized. E-posta veya şifre hatalı.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Email or password is wrong"

@@ -1,0 +1,9 @@
+type: object
+properties:
+  email:
+    type: string
+    format: email
+  subscription:
+    type: string
+    enum: [starter, pro, business]
+    default: starter
