@@ -48,6 +48,7 @@ components:
       $ref: ../swagger/components/schemas/Contact.yaml
     ContactPayload:
       $ref: ../swagger/components/schemas/ContactPayload.yaml
+  responses:
   securitySchemes:
     bearerAuth:
       type: http
