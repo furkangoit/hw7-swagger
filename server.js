@@ -19,19 +19,11 @@ const app = express();
 app.use(cors()); // Farklı kaynaklardan (React projeniz gibi) gelen isteklere izin verir
 app.use(express.json()); // Gelen isteklerin body'sindeki JSON verisini okumak için
 
-// ROTAYI BAĞLAMA (güvenli): '/api/contacts' ile başlayan istekleri contactsRouter'a yönlendir
-const contactsRouterPath = path.join(__dirname, 'routes', 'api', 'contacts.js');
-if (fs.existsSync(contactsRouterPath)) {
-  try {
-    const contactsRouter = require(contactsRouterPath);
-    app.use('/api/contacts', contactsRouter);
-    console.log("Contacts router mounted at /api/contacts");
-  } catch (err) {
-    console.error("Hata: contacts router yüklenirken sorun oluştu:", err);
-  }
-} else {
-  console.warn("Contacts router not mounted: routes/api/contacts.js not found.");
-}
+// ROTAYI BAĞLAMA:
+// '/api/contacts' ile başlayan tüm istekleri contactsRouter'a gönder
+// (Varsayılan dev/prod yapılarında routes/api/contacts.js dosyanızın bulunduğundan emin olun)
+const contactsRouter = require('./routes/api/contacts');
+app.use('/api/contacts', contactsRouter);
 
 // --- YENİ GÜVENLİ KOD ---
 const swaggerFilePath = path.join(__dirname, 'docs', 'swagger.json');
