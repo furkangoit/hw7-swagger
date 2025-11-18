@@ -4,6 +4,9 @@ const dotenv = require('dotenv');
 const swaggerUi = require('swagger-ui-express');
 const fs = require('fs'); // Dosya sistemini okumak için 'fs' modülünü ekleyin (Node.js'te varsayılan)
 const path = require('path'); // Dosya yolları için 'path' modülünü ekleyin (Node.js'te varsayılan)
+// Contacts router is optional in this project structure. Load it only if the file exists
+// to avoid crashing when the routes file is not present (useful for students/templates).
+// We'll check for routes/api/contacts.js and mount it if found.
 
 // .env dosyasındaki değişkenleri yükler
 // (Bunu en üste koymak önemlidir)
@@ -15,6 +18,20 @@ const app = express();
 // Middleware'ler (Ara yazılımlar)
 app.use(cors()); // Farklı kaynaklardan (React projeniz gibi) gelen isteklere izin verir
 app.use(express.json()); // Gelen isteklerin body'sindeki JSON verisini okumak için
+
+// ROTAYI BAĞLAMA (güvenli): '/api/contacts' ile başlayan istekleri contactsRouter'a yönlendir
+const contactsRouterPath = path.join(__dirname, 'routes', 'api', 'contacts.js');
+if (fs.existsSync(contactsRouterPath)) {
+  try {
+    const contactsRouter = require(contactsRouterPath);
+    app.use('/api/contacts', contactsRouter);
+    console.log("Contacts router mounted at /api/contacts");
+  } catch (err) {
+    console.error("Hata: contacts router yüklenirken sorun oluştu:", err);
+  }
+} else {
+  console.warn("Contacts router not mounted: routes/api/contacts.js not found.");
+}
 
 // --- YENİ GÜVENLİ KOD ---
 const swaggerFilePath = path.join(__dirname, 'docs', 'swagger.json');
