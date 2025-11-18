@@ -1,13 +1,25 @@
 const express = require('express');
 const router = express.Router();
 
-// Simple stub endpoints so the server can run during development
+// Şimdilik test için basit bir cevap döndürelim
 router.get('/', (req, res) => {
-  res.json({ message: 'Contacts list (stub)' });
+  res.json({ message: "Tüm kişiler listelendi" });
 });
 
 router.get('/:contactId', (req, res) => {
-  res.json({ message: 'Contact detail (stub)', contactId: req.params.contactId });
+  res.json({ message: `Kişi getirildi: ${req.params.contactId}` });
+});
+
+router.post('/', (req, res) => {
+  res.json({ message: "Yeni kişi eklendi" });
+});
+
+router.delete('/:contactId', (req, res) => {
+  res.json({ message: "Kişi silindi" });
+});
+
+router.patch('/:contactId', (req, res) => {
+  res.json({ message: "Kişi güncellendi" });
 });
 
 module.exports = router;
