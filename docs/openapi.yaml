@@ -1,34 +1,21 @@
 openapi: 3.1.0
 info:
   version: 1.0.0
-  title: Contacts API # <uygulamanızın adı>
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  description: >
-    API for managing contacts # <uygulamanızın açıklaması>
-tags:
-  - name: Contacts
-    description: Operations related to contacts
-  - name: Auth
-    description: User authentication operations
+  title: Contacts API
+  # ...
 servers:
-  - url: http://localhost:3000 # PORT'unuz 3000 ise
-  - url: # buraya yayınlanmış render.com linkiniz gelecek
-paths:
-  /users/register:
-    post:
-      $ref: ../swagger/paths/users/register.yaml
-  /users/login:
-    post:
-      $ref: ../swagger/paths/users/login.yaml
+  - url: http://localhost:3000
+  - url: https://hw7-swagger-p9tq.onrender.com
 
+paths:
+  # BU KISIM ÇOK ÖNEMLİ!
+  # Eğer burası boşsa Swagger da boş görünür.
   /contacts:
     get:
       $ref: ../swagger/paths/contacts/get.yaml
     post:
       $ref: ../swagger/paths/contacts/post.yaml
-
+  
   /contacts/{contactId}:
     get:
       $ref: ../swagger/paths/contacts/{contactId}/get.yaml
@@ -36,21 +23,14 @@ paths:
       $ref: ../swagger/paths/contacts/{contactId}/patch.yaml
     delete:
       $ref: ../swagger/paths/contacts/{contactId}/delete.yaml
+
+  /users/register:
+    post:
+      $ref: ../swagger/paths/users/register.yaml
+  
+  /users/login:
+    post:
+      $ref: ../swagger/paths/users/login.yaml
+
 components:
-  schemas:
-    UserCredentials:
-      $ref: ../swagger/components/schemas/UserCredentials.yaml
-    UserResponse:
-      $ref: ../swagger/components/schemas/UserResponse.yaml
-    LoginResponse:
-      $ref: ../swagger/components/schemas/LoginResponse.yaml
-    Contact:
-      $ref: ../swagger/components/schemas/Contact.yaml
-    ContactPayload:
-      $ref: ../swagger/components/schemas/ContactPayload.yaml
-  responses:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT # Bearer token kullandığınızı belirtir
+  # ... components kodlarınız ...
