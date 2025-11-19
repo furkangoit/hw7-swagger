@@ -3,7 +3,7 @@ const router = express.Router();
 
 // Şimdilik test için basit bir cevap döndürelim
 router.get('/', (req, res) => {
-  res.json({ message: "Tüm kişiler listelendi" });
+  res.json({ message: "Contacts listesi çalışıyor" });
 });
 
 router.get('/:contactId', (req, res) => {
