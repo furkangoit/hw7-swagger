@@ -1,36 +1,42 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-// --- Swagger modülleri ---
 const swaggerUi = require('swagger-ui-express');
-const fs = require('fs');
+const YAML = require('yamljs'); // Yeni eklediğimiz paket
 const path = require('path');
 
 const contactsRouter = require('./routes/api/contacts');
 
 dotenv.config();
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// Rotaları bağlama
+// Rotaları bağla
 app.use('/api/contacts', contactsRouter);
 
-// --- SWAGGER KODU (Burası açık olmalı) ---
-const swaggerPath = path.join(__dirname, 'docs', 'swagger.json');
-
-if (fs.existsSync(swaggerPath)) {
-  const swaggerDocument = require(swaggerPath);
+// --- SWAGGER AYARLARI (KESİN ÇÖZÜM) ---
+// JSON yerine doğrudan YAML dosyasını yüklüyoruz
+try {
+  const swaggerPath = path.join(__dirname, 'docs', 'openapi.yaml');
+  const swaggerDocument = YAML.load(swaggerPath);
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-} else {
-  console.log("Swagger dosyası bulunamadı, dökümantasyon yüklenemedi.");
+  console.log("Swagger başarıyla yüklendi.");
+} catch (error) {
+  console.error("Swagger yüklenirken hata oluştu:", error.message);
 }
-// -----------------------------------------
+// --------------------------------------
 
-// 404 Hatası (JSON döner)
+// 404 Handler
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' });
+});
+
+// Error Handler
+app.use((err, req, res, next) => {
+  res.status(500).json({ message: err.message });
 });
 
 const PORT = process.env.PORT || 3000;

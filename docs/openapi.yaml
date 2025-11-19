@@ -2,19 +2,13 @@ openapi: 3.1.0
 info:
   version: 1.0.0
   title: Contacts API
-  description: GoIT Node.js Projesi API Dokümantasyonu
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: GoIT Node.js Ödevi
 servers:
-  - url: http://localhost:3000/api
-    description: Local Server
   - url: https://hw7-swagger-p9tq.onrender.com/api
     description: Render Live Server
 tags:
   - name: Contacts
   - name: Auth
-
 paths:
   /users/register:
     post:
@@ -27,16 +21,11 @@ paths:
               type: object
               required: [email, password]
               properties:
-                email:
-                  type: string
-                password:
-                  type: string
+                email: { type: string }
+                password: { type: string }
       responses:
-        "201":
-          description: Başarılı kayıt
-        "409":
-          description: Email kullanımda
-
+        '201':
+          description: Başarılı
   /users/login:
     post:
       tags: [Auth]
@@ -48,97 +37,68 @@ paths:
               type: object
               required: [email, password]
               properties:
-                email:
-                  type: string
-                password:
-                  type: string
+                email: { type: string }
+                password: { type: string }
       responses:
-        "200":
-          description: Başarılı giriş (Token döner)
-        "401":
-          description: Hatalı şifre
-
+        '200':
+          description: Başarılı
   /contacts:
     get:
       tags: [Contacts]
-      summary: Kişileri Listele
-      parameters:
-        - name: page
-          in: query
-          schema: { type: integer }
-        - name: limit
-          in: query
-          schema: { type: integer }
+      summary: Listele
       responses:
-        "200":
-          description: Kişi listesi
+        '200':
+          description: Liste
     post:
       tags: [Contacts]
-      summary: Yeni Kişi Ekle
+      summary: Ekle
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              required: [name, email, phone]
               properties:
                 name: { type: string }
-                email: { type: string }
-                phone: { type: string }
       responses:
-        "201":
+        '201':
           description: Oluşturuldu
-
   /contacts/{contactId}:
     get:
       tags: [Contacts]
-      summary: Tek Kişi Getir
+      summary: Detay Getir
       parameters:
         - name: contactId
           in: path
           required: true
           schema: { type: string }
       responses:
-        "200":
-          description: Kişi detayı
-        "404":
-          description: Bulunamadı
+        '200':
+          description: Detay
     delete:
       tags: [Contacts]
-      summary: Kişi Sil
+      summary: Sil
       parameters:
         - name: contactId
           in: path
           required: true
           schema: { type: string }
       responses:
-        "200":
+        '200':
           description: Silindi
     patch:
       tags: [Contacts]
-      summary: Kişi Güncelle
+      summary: Güncelle
       parameters:
         - name: contactId
           in: path
           required: true
           schema: { type: string }
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name: { type: string }
-                email: { type: string }
       responses:
-        "200":
+        '200':
           description: Güncellendi
-
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-  security:
-    - bearerAuth: []
