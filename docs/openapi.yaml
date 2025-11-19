@@ -2,28 +2,28 @@ openapi: 3.1.0
 info:
   version: 1.0.0
   title: Contacts API
-  # ...
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: >
+    GoIT Node.js Kursu - Ödev 7 (Swagger) API Dokümantasyonu.
+    Kişi yönetimi ve Kullanıcı doğrulama işlemlerini kapsar.
+
+tags:
+  - name: Contacts
+    description: Kişi yönetimi ile ilgili işlemler (Ekleme, Listeleme, Silme, Güncelleme)
+  - name: Auth
+    description: Kullanıcı kayıt ve giriş işlemleri
+
 servers:
-  - url: http://localhost:3000
-  - url: https://hw7-swagger-p9tq.onrender.com
+  # Buraya /api ekledik ki istekler doğru adrese gitsin
+  - url: http://localhost:3000/api
+    description: Local Development Sunucusu
+  - url: https://hw7-swagger-p9tq.onrender.com/api
+    description: Render Canlı Sunucu
 
 paths:
-  # BU KISIM ÇOK ÖNEMLİ!
-  # Eğer burası boşsa Swagger da boş görünür.
-  /contacts:
-    get:
-      $ref: ../swagger/paths/contacts/get.yaml
-    post:
-      $ref: ../swagger/paths/contacts/post.yaml
-  
-  /contacts/{contactId}:
-    get:
-      $ref: ../swagger/paths/contacts/{contactId}/get.yaml
-    patch:
-      $ref: ../swagger/paths/contacts/{contactId}/patch.yaml
-    delete:
-      $ref: ../swagger/paths/contacts/{contactId}/delete.yaml
-
+  # --- AUTH ROTALARI ---
   /users/register:
     post:
       $ref: ../swagger/paths/users/register.yaml
@@ -32,5 +32,44 @@ paths:
     post:
       $ref: ../swagger/paths/users/login.yaml
 
+  # --- CONTACTS ROTALARI ---
+  /contacts:
+    get:
+      $ref: ../swagger/paths/contacts/get.yaml
+    post:
+      $ref: ../swagger/paths/contacts/post.yaml
+
+  /contacts/{contactId}:
+    get:
+      $ref: ../swagger/paths/contacts/{contactId}/get.yaml
+    patch:
+      $ref: ../swagger/paths/contacts/{contactId}/patch.yaml
+    delete:
+      $ref: ../swagger/paths/contacts/{contactId}/delete.yaml
+
 components:
-  # ... components kodlarınız ...
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # Bu referansların swagger/components/schemas içinde olduğundan emin olun
+    Contact:
+      $ref: ../swagger/components/schemas/Contact.yaml
+    ContactPayload:
+      $ref: ../swagger/components/schemas/ContactPayload.yaml
+    UserCredentials:
+      $ref: ../swagger/components/schemas/UserCredentials.yaml
+    UserResponse:
+      $ref: ../swagger/components/schemas/UserResponse.yaml
+    LoginResponse:
+      $ref: ../swagger/components/schemas/LoginResponse.yaml
+
+  responses:
+    # Bu referansların swagger/components/responses içinde olduğundan emin olun
+    NotFound:
+      $ref: ../swagger/components/responses/NotFound.yaml
+    Unauthorized:
+      $ref: ../swagger/components/responses/Unauthorized.yaml
