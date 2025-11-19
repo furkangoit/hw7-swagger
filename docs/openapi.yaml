@@ -2,50 +2,137 @@ openapi: 3.1.0
 info:
   version: 1.0.0
   title: Contacts API
+  description: GoIT Node.js Projesi API Dokümantasyonu
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  description: >
-    GoIT Node.js Kursu - Ödev 7 (Swagger) API Dokümantasyonu.
-    Kişi yönetimi ve Kullanıcı doğrulama işlemlerini kapsar.
-
+servers:
+  - url: http://localhost:3000/api
+    description: Local Server
+  - url: https://hw7-swagger-p9tq.onrender.com/api
+    description: Render Live Server
 tags:
   - name: Contacts
-    description: Kişi yönetimi ile ilgili işlemler (Ekleme, Listeleme, Silme, Güncelleme)
   - name: Auth
-    description: Kullanıcı kayıt ve giriş işlemleri
-
-servers:
-  # Buraya /api ekledik ki istekler doğru adrese gitsin
-  - url: http://localhost:3000/api
-    description: Local Development Sunucusu
-  - url: https://hw7-swagger-p9tq.onrender.com/api
-    description: Render Canlı Sunucu
 
 paths:
-  # --- AUTH ROTALARI ---
   /users/register:
     post:
-      $ref: ../swagger/paths/users/register.yaml
-  
+      tags: [Auth]
+      summary: Kayıt Ol
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "201":
+          description: Başarılı kayıt
+        "409":
+          description: Email kullanımda
+
   /users/login:
     post:
-      $ref: ../swagger/paths/users/login.yaml
+      tags: [Auth]
+      summary: Giriş Yap
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Başarılı giriş (Token döner)
+        "401":
+          description: Hatalı şifre
 
-  # --- CONTACTS ROTALARI ---
   /contacts:
     get:
-      $ref: ../swagger/paths/contacts/get.yaml
+      tags: [Contacts]
+      summary: Kişileri Listele
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer }
+        - name: limit
+          in: query
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Kişi listesi
     post:
-      $ref: ../swagger/paths/contacts/post.yaml
+      tags: [Contacts]
+      summary: Yeni Kişi Ekle
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, phone]
+              properties:
+                name: { type: string }
+                email: { type: string }
+                phone: { type: string }
+      responses:
+        "201":
+          description: Oluşturuldu
 
   /contacts/{contactId}:
     get:
-      $ref: ../swagger/paths/contacts/{contactId}/get.yaml
-    patch:
-      $ref: ../swagger/paths/contacts/{contactId}/patch.yaml
+      tags: [Contacts]
+      summary: Tek Kişi Getir
+      parameters:
+        - name: contactId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Kişi detayı
+        "404":
+          description: Bulunamadı
     delete:
-      $ref: ../swagger/paths/contacts/{contactId}/delete.yaml
+      tags: [Contacts]
+      summary: Kişi Sil
+      parameters:
+        - name: contactId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Silindi
+    patch:
+      tags: [Contacts]
+      summary: Kişi Güncelle
+      parameters:
+        - name: contactId
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                email: { type: string }
+      responses:
+        "200":
+          description: Güncellendi
 
 components:
   securitySchemes:
@@ -53,23 +140,5 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-
-  schemas:
-    # Bu referansların swagger/components/schemas içinde olduğundan emin olun
-    Contact:
-      $ref: ../swagger/components/schemas/Contact.yaml
-    ContactPayload:
-      $ref: ../swagger/components/schemas/ContactPayload.yaml
-    UserCredentials:
-      $ref: ../swagger/components/schemas/UserCredentials.yaml
-    UserResponse:
-      $ref: ../swagger/components/schemas/UserResponse.yaml
-    LoginResponse:
-      $ref: ../swagger/components/schemas/LoginResponse.yaml
-
-  responses:
-    # Bu referansların swagger/components/responses içinde olduğundan emin olun
-    NotFound:
-      $ref: ../swagger/components/responses/NotFound.yaml
-    Unauthorized:
-      $ref: ../swagger/components/responses/Unauthorized.yaml
+  security:
+    - bearerAuth: []
